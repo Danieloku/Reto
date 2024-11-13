@@ -1,6 +1,6 @@
 #Se nos pide encontrear el cableado + optimo por lo que lo ideal sería utilizar un minimum spanning tree, en este caso vamos a usar Prim
 
-def prim_mst(n, weight): # "n" es el numero de colonias a las que queremos llegar
+def Reto(n, weight): # "n" es el numero de colonias a las que queremos llegar
     in_mst = [False] * n
     key = [float('inf')] * n #es la lista que almacena el peso mínimo para llegar a cada vértice desde el MST
     parent = [None] * n
@@ -31,6 +31,16 @@ def prim_mst(n, weight): # "n" es el numero de colonias a las que queremos llega
 
     return mst_edges
 
+# Convertir 0 a 'A', 1 a 'B', etc.
+def get_mst_edges_with_colonies(mst_edges):
+    
+    edge_list = []
+    for u, v in mst_edges:
+        colony_u = chr(65 + u)  
+        colony_v = chr(65 + v)
+        edge_list.append("({}, {})".format(colony_u, colony_v))
+    return edge_list
+
 def main():
     n = int(input("Ingresa el número de colonias: "))
     print("Ingresa la matriz de distancias ({} filas de {} números):".format(n, n))
@@ -47,18 +57,18 @@ def main():
             weight.append(row)
             break
 
-    mst_edges = prim_mst(n, weight)
-
-    # Convertir índices a letras para las colonias
-    edge_list = []
-    for u, v in mst_edges:
-        colony_u = chr(65 + u)  # Convertir 0 a 'A', 1 a 'B', etc.
-        colony_v = chr(65 + v)
-        edge_list.append("({}, {})".format(colony_u, colony_v))
-
+    mst_edges = Reto(n, weight)
+    edge_list = get_mst_edges_with_colonies(mst_edges)
     output = ', '.join(edge_list)
     print("Forma óptima de cablear las colonias:")
     print(output)
 
 if __name__ == "__main__":
     main()
+
+        #Prueba
+    #4
+    #0 16 35 32
+    #16 0 18 21
+    #45 18 0 7
+    #32 21 7 0
