@@ -4,8 +4,10 @@
 from typing import List, Tuple, Optional
 
 def Reto(n: int, weight: List[List[int]]) -> List[Tuple[int, int]]:  # "n" es el número de colonias a las que queremos llegar
+    if len(weight) != n or any(len(row) != n for row in weight):
+        raise ValueError("La matriz de pesos debe ser de tamaño n x n.")
     in_mst: List[bool] = [False] * n
-    key: List[float] = [float('inf')] * n  # Es la lista que almacena el peso mínimo para llegar a cada vértice desde el MST
+    key: List[float] = [float('inf')] * n  # Es la lista que almacena el peso mínimo de cada vertice 
     parent: List[Optional[int]] = [None] * n
 
     key[0] = 0
@@ -19,24 +21,24 @@ def Reto(n: int, weight: List[List[int]]) -> List[Tuple[int, int]]:  # "n" es el
                 u = i
 
         if u == -1:
-            break  # Todos los vértices están en el MST o el grafo no es conexo
+            break  
 
         in_mst[u] = True
 
-        # Actualizar key y parent para los vértices adyacentes a u
+        # Actualizarpara los vértices al lado de u
         for v in range(n):
             if weight[u][v] > 0 and not in_mst[v] and weight[u][v] < key[v]:
                 key[v] = weight[u][v]
                 parent[v] = u
 
-    # Recopilar las aristas en el MST
+    #aristas
     mst_edges: List[Tuple[int, int]] = []
     for v in range(1, n):
         p = parent[v]
         if p is not None:
             mst_edges.append((p, v))
 
-    return mst_edges  # Agregamos el return que faltaba
+    return mst_edges  
 
 # Convertir 0 a 'A', 1 a 'B', etc.
 def get_mst_edges_with_colonies(mst_edges: List[Tuple[int, int]]) -> List[str]:
@@ -48,7 +50,7 @@ def get_mst_edges_with_colonies(mst_edges: List[Tuple[int, int]]) -> List[str]:
     return edge_list
 
 def main() -> None:
-    # Leer datos desde un archivo .txt
+    # Leer datos desd .txt
     try:
         with open('input.txt', 'r') as file:
             lines: List[str] = file.readlines()
@@ -56,7 +58,7 @@ def main() -> None:
         print("El archivo 'input.txt' no se encontró.")
         return
 
-    # Eliminar líneas vacías y saltos de línea
+    # Eliminar líneas vacías 
     lines = [line.strip() for line in lines if line.strip() != '']
 
     if not lines:
@@ -91,8 +93,6 @@ def main() -> None:
             print(f"La fila {i+1} de la matriz no tiene {n} elementos.")
             return
         weight.append(weight_row)
-
-    # Aquí podrías leer más datos si se requieren
 
     mst_edges: List[Tuple[int, int]] = Reto(n, weight)
     edge_list: List[str] = get_mst_edges_with_colonies(mst_edges)
